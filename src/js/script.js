@@ -92,6 +92,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion(){
@@ -121,7 +122,7 @@
 
     initOrderForm(){
       const thisProduct = this;
-      console.log(thisProduct.initOrderForm);
+      //console.log(thisProduct.initOrderForm);
 
       thisProduct.form.addEventListener('submit', function(event){
         event.preventDefault();
@@ -142,15 +143,14 @@
 
     processOrder(){
       const thisProduct = this;
-      console.log(thisProduct.processOrder);
+      //console.log(thisProduct.processOrder);
 
       /* covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']} */
       const formData = utils.serializeFormToObject(thisProduct.form);
-      console.log('formData', formData);
+      //console.log('formData', formData);
 
       /* set price to default price */
       let price = thisProduct.data.price;
-      console.log('price:', price);
 
       /* for every category (param)... */
       for(let paramId in thisProduct.data.params) {
@@ -180,6 +180,23 @@
               price = price - option.price;
             }
           }
+
+          /* find image with class .paramId-optionId in imageWrapper */
+          const getImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+
+          /* check if there is an image for the option */
+          if(getImage){
+
+            /* check if option is selected */
+            if(formData[paramId] && formData[paramId].includes(optionId)){
+              /* if picked, add class classNames.menuProduct.imageVisible */
+              getImage.classList.add(classNames.menuProduct.imageVisible);
+            } else {
+              /* if not picked, remove class classNames.menuProduct.imageVisible */
+              getImage.classList.remove(classNames.menuProduct.imageVisible);
+            }
+          }
+
         }
 
         /* update calculated price in the HTML*/
@@ -191,7 +208,7 @@
   const app = {
     initMenu: function(){
       const thisApp = this; //obiekt zapisany w stałej app
-      console.log('thisApp.data:', thisApp.data);
+      //console.log('thisApp.data:', thisApp.data);
 
       for(let productData in thisApp.data.products){
         new Product(productData, thisApp.data.products[productData]);
