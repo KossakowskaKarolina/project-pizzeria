@@ -161,6 +161,7 @@
 
         /* for every option in this category */
         for(let optionId in param.options) {
+
           /* determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true } */
           const option = param.options[optionId];
           console.log(optionId, option);
@@ -176,8 +177,7 @@
             /* check if the option is default */
             if(option.default == true) {
               /* reduce price variable */
-              price = price - option.default;
-
+              price = price - option.price;
             }
           }
         }
