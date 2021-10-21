@@ -169,6 +169,7 @@
       thisProduct.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
     }
 
@@ -229,6 +230,9 @@
           }
         }
       }
+
+      thisProduct.priceSingle = price;
+
       /* multiply price by amount */
       price *= thisProduct.amountWidget.value;
 
@@ -244,6 +248,63 @@
       thisProduct.amountWidgetElem.addEventListener('updated', function(){
         thisProduct.processOrder();
       });
+    }
+
+    addToCart(){
+      const thisProduct = this;
+
+      app.cart.add(thisProduct.prepareCartProduct());
+      thisProduct.prepareCartProductParams();
+    }
+
+    prepareCartProduct(){
+      const thisProduct = this;
+
+      const productSummary = {
+        id: thisProduct.id,
+        name: thisProduct.data.name,
+        amount: thisProduct.amountWidget.value,
+        priceSingle: thisProduct.priceSingle,
+        price: thisProduct.priceSingle * thisProduct.amountWidget.value,
+        params: thisProduct.prepareCartProductParams(),
+      };
+
+      return productSummary;
+    }
+
+    prepareCartProductParams(){
+      const thisProduct = this;
+
+      const cartProductparams = {};
+
+      /* covert form to object structure e.g. { sauce: ['tomato'], toppings: ['olives', 'redPeppers']} */
+      const formData = utils.serializeFormToObject(thisProduct.form);
+
+      /* for every category (param)... */
+      for(let paramId in thisProduct.data.params) {
+
+        /* determine param value, e.g. paramId = 'toppings', param = { label: 'Toppings', type: 'checkboxes'... } */
+        const param = thisProduct.data.params[paramId];
+
+        cartProductparams[paramId] ={
+          label: param.label,
+          options: {},
+        };
+
+        /* for every option in this category */
+        for(let optionId in param.options) {
+
+          /* determine option value, e.g. optionId = 'olives', option = { label: 'Olives', price: 2, default: true } */
+          const option = param.options[optionId];
+
+          /* check if there is param with a name of paramId in formData and if it includes optionId */
+          if(formData[paramId] && formData[paramId].includes(optionId)) {
+            cartProductparams[paramId].options[optionId] = option.label;
+          }
+        }
+      }
+
+      return cartProductparams;
     }
   }
 
@@ -327,6 +388,7 @@
 
       thisCart.dom.wrapper = element;
       thisCart.dom.toggleTrigger = element.querySelector(select.cart.toggleTrigger);
+      thisCart.dom.productList = element.querySelector(select.cart.productList);
     }
 
     initActions(){
@@ -338,6 +400,21 @@
         /* toggle active class on thisProduct.element */
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+    }
+
+    add(menuProduct){
+      const thisCart = this;
+
+      console.log('adding product', menuProduct);
+
+      /* generate HTML based on template */
+      const generatedHTML = templates.cartProduct(menuProduct);
+
+      /* create element using utils.createDOMFromHTML */
+      thisCart.element = utils.createDOMFromHTML(generatedHTML); //stworzony element DOM zapisujemy od razu jako właściwość instancji
+
+      /* add element to cart.dom */
+      thisCart.dom.productList.appendChild(thisCart.element);
     }
   }
 
@@ -361,7 +438,7 @@
       const thisApp = this;
 
       const cartElem = document.querySelector(select.containerOf.cart);
-      thisApp.cart = new Cart(cartElem);
+      thisApp.cart = new Cart(cartElem); //poza obiektem app możemy tę instację wywołać za pomocą app.cart
     },
 
     init: function(){
