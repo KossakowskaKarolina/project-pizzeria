@@ -415,6 +415,37 @@
 
       /* add element to cart.dom */
       thisCart.dom.productList.appendChild(thisCart.element);
+
+      thisCart.products.push(new CartProduct(menuProduct, thisCart.element));
+      console.log(thisCart.products);
+    }
+  }
+
+  class CartProduct{
+    constructor(menuProduct, element){
+      const thisCartProduct = this;
+
+      thisCartProduct.id = menuProduct.id;
+      thisCartProduct.name = menuProduct.name;
+      thisCartProduct.amount = menuProduct.amount;
+      thisCartProduct.priceSingle = menuProduct.priceSingle;
+      thisCartProduct.price = menuProduct.price;
+      thisCartProduct.params = menuProduct.params;
+
+      thisCartProduct.getElements(element);
+      console.log('new CartProduct', thisCartProduct);
+    }
+
+    getElements(element){
+      const thisCartProduct = this;
+
+      thisCartProduct.dom = {};
+
+      thisCartProduct.dom.wrapper = element;
+      thisCartProduct.dom.amountWidget = element.querySelector(select.cartProduct.amountWidget);
+      thisCartProduct.dom.price = element.querySelector(select.cartProduct.price);
+      thisCartProduct.dom.edit = element.querySelector(select.cartProduct.edit);
+      thisCartProduct.dom.remove = element.querySelector(select.cartProduct.remove);
     }
   }
 
