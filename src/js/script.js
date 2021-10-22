@@ -417,6 +417,29 @@
 
       thisCart.products.push(new CartProduct(menuProduct, thisCart.element));
       console.log(thisCart.products);
+
+      thisCart.update();
+    }
+
+    update(){
+      const thisCart = this;
+
+      const deliveryFee = settings.cart.defaultDeliveryFee;
+      let totalNumber = 0;
+      let subtotalPrice = 0;
+
+      for(let product of thisCart.products){
+        totalNumber += product.amount;
+        console.log(totalNumber);
+
+        subtotalPrice += product.price;
+        console.log(subtotalPrice);
+      }
+
+      if(totalNumber != 0){
+        thisCart.totalPrice = subtotalPrice + deliveryFee;
+        console.log(thisCart.totalPrice);
+      }
     }
   }
 
