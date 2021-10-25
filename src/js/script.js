@@ -311,7 +311,7 @@
     constructor(element){
       const thisWidget = this;
       thisWidget.getElements(element);
-      thisWidget.setValue(settings.amountWidget.defaultValue);
+      thisWidget.setValue(thisWidget.input.value || settings.amountWidget.defaultValue);
       thisWidget.initActions(thisWidget.input.value);
 
       //console.log('AmountWidget:', thisWidget);
@@ -448,7 +448,7 @@
         subtotalPrice += product.price;
       }
 
-      totalNumber == 0 ? deliveryFee = 0 : deliveryFee = settings.cart.defaultDeliveryFee
+      totalNumber == 0 ? deliveryFee = 0 : deliveryFee = settings.cart.defaultDeliveryFee;
       thisCart.totalPrice = subtotalPrice + deliveryFee;
 
       thisCart.dom.deliveryFee.innerHTML = deliveryFee;
