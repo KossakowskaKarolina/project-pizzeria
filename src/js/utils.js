@@ -1,6 +1,6 @@
 /* global Handlebars, dataSource */
 
-export const utils = {};
+const utils = {};
 
 utils.createDOMFromHTML = function(htmlString) {
   let div = document.createElement('div');
@@ -77,3 +77,5 @@ utils.addDays = function(dateStr, days){
   dateObj.setDate(dateObj.getDate() + days);
   return dateObj;
 };
+
+export default utils;
