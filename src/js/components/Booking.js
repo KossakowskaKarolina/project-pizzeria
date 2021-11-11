@@ -140,6 +140,9 @@ class Booking {
     }
 
     for(let table of thisBooking.dom.tables){
+      table.classList.remove(classNames.booking.tableSelected);
+      thisBooking.tableId = 0;
+
       let tableId = table.getAttribute(settings.booking.tableIdAttribute);
       if(!isNaN(tableId)){
         tableId = parseInt(tableId);
@@ -173,6 +176,30 @@ class Booking {
     thisBooking.dom.datePicker = document.querySelector(select.widgets.datePicker.wrapper);
     thisBooking.dom.hourPicker = document.querySelector(select.widgets.hourPicker.wrapper);
     thisBooking.dom.tables = document.querySelectorAll(select.booking.tables);
+    thisBooking.dom.floorPlan = document.querySelector(select.booking.floorPlan);
+  }
+
+  initTables(event){
+    const thisBooking = this;
+
+    const tableId = event.target.getAttribute(settings.booking.tableIdAttribute);
+
+    if(event.target.classList.contains(classNames.booking.table)){
+      if(!event.target.classList.contains(classNames.booking.tableBooked)){
+        if(!event.target.classList.contains(classNames.booking.tableSelected)){
+          thisBooking.updateDOM();
+          event.target.classList.add(classNames.booking.tableSelected);
+          thisBooking.tableId = tableId;
+          //console.log(thisBooking.tableId);
+        } else{
+          event.target.classList.remove(classNames.booking.tableSelected);
+        }
+      } else {
+        alert('Stolik niedostępny');
+      }
+    }
+
+
   }
 
   initWidgets(){
@@ -191,6 +218,11 @@ class Booking {
     thisBooking.dom.wrapper.addEventListener('updated', function(){
       thisBooking.updateDOM();
     });
+
+    thisBooking.dom.floorPlan.addEventListener('click', function(){
+      thisBooking.initTables(event);
+    });
+
   }
 }
 
