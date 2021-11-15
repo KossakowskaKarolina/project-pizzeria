@@ -71,6 +71,10 @@ export const select = {
   nav: {
     links: '.main-nav a',
   },
+
+  homeDiv: {
+    linkToBoxes: '.top-boxes',
+  }
 };
 
 export const classNames = {

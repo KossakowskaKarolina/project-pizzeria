@@ -9,6 +9,7 @@ const app = {
 
     thisApp.pages = document.querySelector(select.containerOf.pages).children; //znajdujemy dzieci konterera pages tj. order i booking
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
+    thisApp.linkToBoxes = document.querySelector(select.homeDiv.linkToBoxes);
 
     const idFromHash = window.location.hash.replace('#/', ''); //podajemy, która stroma ma być domyślnie otwierana
 
@@ -39,6 +40,8 @@ const app = {
 
       });
     }
+
+    thisApp.initLinks();
   },
 
   activatePage: function(pageId) {
@@ -62,6 +65,22 @@ const app = {
       );
     }
 
+  },
+
+  initLinks: function(){
+    const thisApp = this;
+
+    thisApp.linkToBoxes.addEventListener('click', function(event) {
+      const idLink = event.target.offsetParent.getAttribute('class');
+      let id;
+      if(event.target.offsetParent.classList.contains('box-text')){
+        id = idLink.replace('box-text link_to_', '');
+      } else if(event.target.offsetParent.classList.contains('box')){
+        id = idLink.replace('box link_to_', '');
+      }
+      thisApp.activatePage(id);
+      window.location.hash = '#/' + id;
+    });
   },
 
   initMenu: function(){
